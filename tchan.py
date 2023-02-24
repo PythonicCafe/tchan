@@ -9,7 +9,7 @@ import requests
 from lxml.html import document_fromstring
 
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 REGEXP_BACKGROUND_IMAGE_URL = re.compile(r"background-image:url\('(.*)'\)")
 
 
@@ -18,6 +18,14 @@ def extract_bg_img(style):
     if url.startswith("//"):
         url = f"https:{url}"
     return url
+
+def convert_int(value):
+    if value.endswith("M"):
+        return int(float(value[:-1]) * 1_000_000)
+    elif value.endswith("K"):
+        return int(float(value[:-1]) * 1_000)
+    else:
+        return int(value)
 
 
 @dataclass
@@ -96,7 +104,7 @@ def parse_info(tree):
         ".//div[@class = 'tgme_channel_info_counter']"
     ):
         key = counter_div.xpath(".//span[@class = 'counter_type']/text()")[0]
-        value = int(
+        value = convert_int(
             counter_div.xpath(".//span[@class = 'counter_value']/text()")[0]
         )
         counters[key] = value
@@ -159,12 +167,7 @@ def parse_messages(original_url, tree):
                 delimiter="",
             )
             if views_text:
-                if views_text.endswith("M"):
-                    views = int(float(views_text[:-1]) * 1_000_000)
-                elif views_text.endswith("K"):
-                    views = int(float(views_text[:-1]) * 1_000)
-                else:
-                    views = int(views_text)
+                views = convert_int(views_text)
             if text_div is not None:
                 text = extract_text(text_div.xpath(".//text()"), delimiter="\n")
                 emoji_style_text = text_div.xpath(
