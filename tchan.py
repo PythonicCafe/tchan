@@ -9,7 +9,7 @@ import requests
 from lxml.html import document_fromstring
 
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 REGEXP_BACKGROUND_IMAGE_URL = re.compile(r"background-image:url\('(.*)'\)")
 
 
@@ -418,8 +418,13 @@ def main():
     import json
     from pathlib import Path
 
-    from loguru import logger
-    from tqdm import tqdm
+    try:
+        from loguru import logger
+        from tqdm import tqdm
+    except ImportError:
+        print("Error - you muse install CLI dependencies with:")
+        print("    pip install tchan[cli]")
+        exit(1)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("csv_filename")
