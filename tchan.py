@@ -1,13 +1,21 @@
 import datetime
 import re
 from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import List
 from urllib.parse import urljoin, urlparse
 
 import requests
 from lxml.html import document_fromstring
 
-__version__ = "0.1.0"
+
+def read_version():
+    with open(Path(__file__).parent / "setup.cfg") as fobj:
+        for line in fobj:
+            if line.startswith("version"):
+                return line.replace("version = ", "").strip()
+
+__version__ = read_version()
 REGEXP_BACKGROUND_IMAGE_URL = re.compile(r"background-image:url\('(.*)'\)")
 
 
@@ -407,12 +415,7 @@ class ChannelScraper:
                 break
             url = urljoin(url, next_page_url[0])
 
-
-# TODO: split CLI requirements on setup.cfg?
-# TODO: how to merge requirements{,-dev}.txt with setup.cfg?
-# TODO: how to read version on setup.cfg?
-
-if __name__ == "__main__":
+def main():
     import argparse
     import csv
     import json
@@ -464,3 +467,7 @@ if __name__ == "__main__":
                 f"Scraped {scrape_count} user{'s' if scrape_count > 1 else ''}"
             )
         progress.close()
+
+
+if __name__ == "__main__":
+    main()
