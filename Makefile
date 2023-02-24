@@ -10,4 +10,16 @@ test:
 test-v:
 	pytest -vvv
 
-.PHONY: lint test test-v
+test-release:
+	rm -rf build dist
+	python setup.py sdist bdist_wheel
+	twine check dist/*
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+release:
+	rm -rf build dist
+	python setup.py sdist bdist_wheel
+	twine check dist/*
+	twine upload dist/*
+
+.PHONY: lint test test-v test-release release

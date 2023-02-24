@@ -9,13 +9,7 @@ import requests
 from lxml.html import document_fromstring
 
 
-def read_version():
-    with open(Path(__file__).parent / "setup.cfg") as fobj:
-        for line in fobj:
-            if line.startswith("version"):
-                return line.replace("version = ", "").strip()
-
-__version__ = read_version()
+__version__ = "0.1.1"
 REGEXP_BACKGROUND_IMAGE_URL = re.compile(r"background-image:url\('(.*)'\)")
 
 
