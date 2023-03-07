@@ -1886,3 +1886,19 @@ def test_parse_signed_edited_text_message():
         views=2,
     )
     assert result[0] == expected
+
+
+def test_parse_no_posts_found():
+    html = """
+        <main class="tgme_main" data-url="/some-channel">
+        <div class="tgme_container">
+            <section class="tgme_channel_history js-message_history">
+            <div class="tgme_widget_message_wrap js-widget_message_wrap"><div class="tgme_widget_message_centered"><div class="tme_no_messages_found">No posts found</div></div></div>
+            </section>
+        </div>
+        </main>
+    """
+    tree = document_fromstring(html)
+    result = list(parse_messages(original_url, tree))
+    expected = []
+    assert result == expected

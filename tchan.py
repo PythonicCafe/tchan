@@ -125,6 +125,11 @@ def parse_messages(original_url, tree):
     "Retrieve messages from HTML tree"
     messages = tree.xpath("//div[contains(@class, 'tgme_widget_message_wrap')]")
     for message in reversed(messages):
+        if message.xpath(".//div[contains(@class, 'tme_no_messages_found')]"):
+            # XXX: this case may happen because a great number of requests was
+            # made and Telegram sent this response as if there were no new
+            # posts when actually there are.
+            return
         channel, id_ = message.xpath(".//div/@data-post")[0].split("/")
         created_at = datetime.datetime.fromisoformat(
             message.xpath(".//time/@datetime")[0]
