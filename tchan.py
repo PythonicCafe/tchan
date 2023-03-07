@@ -9,7 +9,7 @@ import requests
 from lxml.html import document_fromstring
 
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 REGEXP_BACKGROUND_IMAGE_URL = re.compile(r"background-image:url\('(.*)'\)")
 
 
